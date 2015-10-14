@@ -53,17 +53,17 @@ public class Packet {
 				
 			}
 		}
-//		
-//		for(String s: words){
-//			System.out.print(s+".");
-//			
-////			System.out.println("segment: " + s);
-////			for(char c: s.toCharArray()){
-////				System.out.println("Byte value for '"+ c +"': " +(int) c);	
-////			}
-//			
-//			
-//		}
+		
+		for(String s: words){
+			System.out.print(s+".");
+			
+//			System.out.println("segment: " + s);
+//			for(char c: s.toCharArray()){
+//				System.out.println("Byte value for '"+ c +"': " +(int) c);	
+//			}
+			
+			
+		}
 		
 	}
 	
