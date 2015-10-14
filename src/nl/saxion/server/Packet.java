@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Packet {
 	byte[] receiveData = new byte[2048];
+	private ArrayList<String> words;
 
 	public Packet(byte[] bs) {
 		this.receiveData = bs;
@@ -13,7 +14,7 @@ public class Packet {
 	//TODO name uitlezen in ene functie zetten
 	public void printData() {
 	
-		ArrayList<String> words = new ArrayList<String>();
+		words = new ArrayList<String>();
 		String currentWord = "";
 		
 		
@@ -52,17 +53,21 @@ public class Packet {
 				
 			}
 		}
+//		
+//		for(String s: words){
+//			System.out.print(s+".");
+//			
+////			System.out.println("segment: " + s);
+////			for(char c: s.toCharArray()){
+////				System.out.println("Byte value for '"+ c +"': " +(int) c);	
+////			}
+//			
+//			
+//		}
 		
-		for(String s: words){
-			System.out.print(s+".");
-			
-//			System.out.println("segment: " + s);
-//			for(char c: s.toCharArray()){
-//				System.out.println("Byte value for '"+ c +"': " +(int) c);	
-//			}
-			
-			
-		}
-		
+	}
+	
+	public ArrayList<String> getWords(){
+		return words;
 	}
 }
