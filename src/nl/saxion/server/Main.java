@@ -4,6 +4,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import nl.saxion.server.DNS.DNSPacket;
+import nl.saxion.server.DNS.Segment;
+
 public class Main {
 
 	/**
@@ -60,13 +63,17 @@ public class Main {
 		while (true) {
 			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 			serverSocket.receive(receivePacket);
+
+			
+
 			
 			System.out.println("Received datagram: " + receivePacket.getLength());
 			
 			byte[] data = receivePacket.getData();
 			printDatagram(data, receivePacket.getLength());
 			
-			
+			DNSPacket dnsPacket = new DNSPacket(receivePacket);
+
 
 //          Werkt niet, iets met de header probably
 //			
@@ -96,41 +103,43 @@ public class Main {
 //			(CNAME). If you are completing the graduate version of this project, you should also be prepared
 //			to accept type 0x0002 (name servers) and 0x000f (mail servers).
 
-			byte[] answer = {
-					//name
-					4, 'd', 'e', 'r', 'p', 4, 'd', 'e', 'r', 'p', 4, 'd', 'e', 'r', 'p',
-					//end of variable length block name
-					0, 
-					// type 
-					0x0001,
-					// class
-					0x0001,
-					//TTL in seconds, 16 bit block
-					0, 30,
-					//RDLENGTH
-					4,
-					(byte) //RDATA (if type is 0x0001 --> 4 bits containing ip
-					192, (byte) 168, 1, 14
-//					// answer ip
-//					3, '1', '9', '2', 3, '1', '6', '8', 1, '1', 2, '1', '4', 
-					};
 			
-			setAnswer(data);
-			setAnswerCount(data, 1);
-			addAnswer(data, answer, receivePacket.getLength());
-			
-			System.out.println("---- answer ----");
-			printDatagram(data, receivePacket.getLength() + answer.length);
-			System.out.println("---- /answer ----");
-			
-			
-			InetAddress IPAddress = receivePacket.getAddress();
-			int port = receivePacket.getPort();
-//			String capitalizedSentence = sentence.toUpperCase();
-//			sendData = capitalizedSentence.getBytes();
-			DatagramPacket sendPacket = new DatagramPacket(data, receivePacket.getLength()+answer.length, IPAddress, port);
-			serverSocket.send(sendPacket);
-			System.out.println("-------");
+//			byte[] answer = {
+//					//name
+//					4, 'd', 'e', 'r', 'p', 4, 'd', 'e', 'r', 'p', 4, 'd', 'e', 'r', 'p',
+//					//end of variable length block name
+//					0, 
+//					// type 
+//					0x0001,
+//					// class
+//					0x0001,
+//					//TTL in seconds, 16 bit block
+//					0, 30,
+//					//RDLENGTH
+//					4,
+//					(byte) //RDATA (if type is 0x0001 --> 4 bits containing ip
+//					192, (byte) 168, 1, 14
+////					// answer ip
+////					3, '1', '9', '2', 3, '1', '6', '8', 1, '1', 2, '1', '4', 
+//					};
+//			
+//			setAnswer(data);
+//			setAnswerCount(data, 1);
+//			addAnswer(data, answer, receivePacket.getLength());
+//			
+//			System.out.println("---- answer ----");
+//			printDatagram(data, receivePacket.getLength() + answer.length);
+//			System.out.println("---- /answer ----");
+//			
+//			
+//			InetAddress IPAddress = receivePacket.getAddress();
+//			int port = receivePacket.getPort();
+////			String capitalizedSentence = sentence.toUpperCase();
+////			sendData = capitalizedSentence.getBytes();
+//			DatagramPacket sendPacket = new DatagramPacket(data, receivePacket.getLength()+answer.length, IPAddress, port);
+//			serverSocket.send(sendPacket);
+//			System.out.println("-------");
+//			
 		}
 
 
