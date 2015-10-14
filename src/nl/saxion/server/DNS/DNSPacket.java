@@ -13,7 +13,7 @@ public class DNSPacket{
 	/**
 	 * data[2&3]
 	 */
-	private byte[] flags = new byte[2];
+	private Flags flags;
 	/**
 	 * data[4&5]
 	 */
@@ -46,7 +46,7 @@ public class DNSPacket{
 		/* DNS header */
 		identifier = new TwoByteValue(data[0], data[1]);
 		//flags
-		System.arraycopy(data, 2, flags, 0, 2);
+		flags = new Flags(data[2], data[3]);
 		//total questions
 		totalQuestions = new TwoByteValue(data[4], data[5]);
 		//total answers
@@ -67,7 +67,6 @@ public class DNSPacket{
 		System.out.println("/* Printing RRs */");
 		questions[0].printName();
 		printDatagram(questions[0].getBytes(), questions[0].getBytes().length);
-		
 	}
 	
 	private void getRRs(){
@@ -85,6 +84,17 @@ public class DNSPacket{
 		
 	}
 	
+	public Flags getFlags(){
+		return flags;
+	}
+	
+	public void addAnswer(AnswerRR answer){
+		AnswerRR[] tempArray = new AnswerRR[answers.length +1];
+		System.arraycopy(answers, 0, tempArray, 0, answers.length);
+		tempArray[answers.length] = answer;
+		answers = tempArray;
+		totalAnswerRRs.setValue(totalAnswerRRs.getValue() +1);
+	}
 	
 	private void printDatagram( byte[] data, int realLength) {
 		//van Paul gekregen :)
