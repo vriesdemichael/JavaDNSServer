@@ -33,9 +33,11 @@ public class QuestionRR {
 			segmentLength = bodyData[index];
 
 		}
+		//index was 0, move to next
+		index++;
 		
-		questionType = new TwoByteValue(bodyData[index + 1], bodyData[index +2]);
-		questionClass = new TwoByteValue(bodyData[index + 3], bodyData[index +4]);
+		questionType = new TwoByteValue(bodyData[index], bodyData[index + 1]);
+		questionClass = new TwoByteValue(bodyData[index + 2], bodyData[index + 3]);
 		endIndex = index + 4;
 	
 	}
