@@ -7,10 +7,13 @@ public class AnswerRR {
 	private ArrayList<Segment> nameSegments;
 	private TwoByteValue answerType;
 	private TwoByteValue answerClass;
+	private String ip;
+	byte rdataLength = (byte) 4;
 	
 	private int endIndex;
 	
-	public AnswerRR(byte[] data, int startIndex) {
+	public AnswerRR(byte[] data, int startIndex,String ip) {
+		this.ip = ip;
 		nameSegments = new ArrayList<Segment>();
 		int index = startIndex;
 		int segmentLength = data[startIndex];
@@ -21,6 +24,7 @@ public class AnswerRR {
 			if(segmentLength < 0){
 				nameSegments.add(new Segment(data, index - segmentLength));
 				//move to next segment
+				
 				index++;
 			}else{
 				nameSegments.add(new Segment(data, index));
@@ -71,8 +75,21 @@ public class AnswerRR {
 			largeByte[byteCount] = (byte)0;
 			byteCount++;
 		}
-		largeByte[byteCount] = (byte)5;
+		
+		
 		byteCount++;
+		
+		
+		//Now add an ip, no clue how this works tbh. Set TTL to 4 seconds. That should be enough to handle the request but give the control to us.
+		largeByte[byteCount] = (byte)0;
+		byteCount++;
+		largeByte[byteCount] = (byte)4;
+		byteCount++;
+		String[] ipar = ip.split(".");
+		byte[] rdata = {(byte)Integer.parseInt(ipar[0]),(byte)Integer.parseInt(ipar[1]),(byte)Integer.parseInt(ipar[2]),(byte)Integer.parseInt(ipar[3])};
+		largeByte = combine(largeByte, rdata);
+		byteCount = byteCount + 8;
+		
 		
 		//make a new byte array with the proper length
 		byte[] question = new byte[byteCount];
@@ -85,5 +102,12 @@ public class AnswerRR {
 		return this.endIndex;
 		
 	}
-
+	
+	public static byte[] combine(byte[] a, byte[] b){
+        int length = a.length + b.length;
+        byte[] result = new byte[length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
+    }
 }
