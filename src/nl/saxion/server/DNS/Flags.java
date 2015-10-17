@@ -133,4 +133,9 @@ public class Flags {
 	private boolean isBitSet(byte b, int pos){
 		return (b & (1 << pos)) != 0;	
 	}
+	
+	public byte[] getBytes(){
+		byte[] bytes = {highByte, lowByte};
+		return bytes;
+	}
 }

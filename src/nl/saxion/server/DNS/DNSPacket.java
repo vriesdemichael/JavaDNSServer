@@ -1,11 +1,9 @@
 package nl.saxion.server.DNS;
 
 import java.net.DatagramPacket;
-import java.util.ArrayList;
 
 public class DNSPacket{
 	private byte[] data = new byte[1024];
-	private DatagramPacket packet;
 	/**
 	 * data[0&1]
 	 */
@@ -40,8 +38,9 @@ public class DNSPacket{
 	private int bodyIndex = 12;
 	
 	public DNSPacket(DatagramPacket packet ) {
-		this.packet = packet;
+
 		this.data = packet.getData();
+		this.answers = new AnswerRR[0];
 		
 		/* DNS header */
 		identifier = new TwoByteValue(data[0], data[1]);
@@ -69,23 +68,42 @@ public class DNSPacket{
 		printDatagram(questions[0].getBytes(), questions[0].getBytes().length);
 	}
 	
+	public AnswerRR[] getAnswers(){
+		return answers;
+	}
+	
+	public QuestionRR[] getQuestions(){
+		return questions;
+	}
+	
+	public int getAmountOfQuestion(){
+		return totalQuestions.getValue();
+	}
+	
+	public int getAmountOfAnswers(){
+		return totalAnswerRRs.getValue();
+	}
+	
 	private void getRRs(){
 		 /* questions */
 		for(int i = 0; i < totalQuestions.getValue(); i++){
 			questions[i] = new QuestionRR(data, bodyIndex);
 			bodyIndex = questions[i].getEndIndex() + 1;
-			this.totalAnswerRRs.setValue(this.totalAnswerRRs.getValue() + 1);
-			answers = new AnswerRR[totalAnswerRRs.getValue()];
 		}
-		
-		
-		
-		for(int i = 0; i < totalAnswerRRs.getValue(); i++){
-			System.out.println("109.72.82.220");
-			answers[i] = new AnswerRR(data, bodyIndex, "109.72.82.220");			
-			bodyIndex = answers[i].getEndIndex() + 1;
-		}
-		
+		if(flags.isQuestion()){
+			//answers the questions
+			for(QuestionRR q : questions){
+				AnswerRR a = new AnswerRR(q);
+				a.setIPv4Answer(192, 168, 1, 14);
+				addAnswer(a);
+			}		
+		}else{
+			//get the answers from the packets
+			for(int i = 0; i < totalAnswerRRs.getValue(); i++){
+				answers[i] = new AnswerRR(data, bodyIndex);
+				bodyIndex = answers[i].getEndIndex() + 1;
+			}
+		}		
 	}
 	
 	public Flags getFlags(){
@@ -93,16 +111,92 @@ public class DNSPacket{
 	}
 	
 	public void addAnswer(AnswerRR answer){
-		AnswerRR[] tempArray = new AnswerRR[answers.length +1];
+		AnswerRR[] tempArray = new AnswerRR[(answers.length +1)];
 		System.arraycopy(answers, 0, tempArray, 0, answers.length);
 		tempArray[answers.length] = answer;
 		answers = tempArray;
 		totalAnswerRRs.setValue(totalAnswerRRs.getValue() +1);
 	}
 	
-	public byte[] getData() {
+	public byte[] getOriginalData() {
 		return this.data;
 	}
+	
+	public byte[] getBytes(){
+		int totalLength = 
+				identifier.getBytes().length +
+				flags.getBytes().length +
+				totalQuestions.getBytes().length +
+				totalAnswerRRs.getBytes().length +
+				totalAuthorityRRs.getBytes().length +
+				totalAdditionalRRs.getBytes().length;
+		
+		if(questions != null){
+			for (QuestionRR r : questions) {
+				totalLength += r.getBytes().length;
+			}
+		}
+		if (answers != null) {
+			for (AnswerRR a : answers) {
+				totalLength += a.getBytes().length;
+			}
+		}
+						
+		byte[] bytes = new byte[totalLength];
+		int byteCount = 0;
+		for(byte b: identifier.getBytes()){
+			bytes[byteCount] = b;
+			byteCount ++;
+		}
+		for(byte b: flags.getBytes()){
+			bytes[byteCount] = b;
+			byteCount ++;
+		}
+		for(byte b: totalQuestions.getBytes()){
+			bytes[byteCount] = b;
+			byteCount ++;
+		}
+		for(byte b: totalAnswerRRs.getBytes()){
+			bytes[byteCount] = b;
+			byteCount ++;
+		}
+		for(byte b: totalAuthorityRRs.getBytes()){
+			bytes[byteCount] = b;
+			byteCount ++;
+		}
+		for(byte b: totalAdditionalRRs.getBytes()){
+			bytes[byteCount] = b;
+			byteCount ++;
+		}
+		for(QuestionRR q: questions){
+			for(byte b: q.getBytes()){
+				bytes[byteCount] = b;
+				byteCount ++;
+			}	
+		}
+		for(AnswerRR r: answers){
+			for(byte b: r.getBytes()){
+				bytes[byteCount] = b;
+				byteCount ++;
+			}	
+		}
+		
+		return bytes;
+	}
+	
+	/**
+	 * Combine two byte arrays into one.
+	 * @param a The first byte array.
+	 * @param b The second byte array.
+	 * @return A byte array starting with a ending with b.
+	 */
+	public static byte[] combine(byte[] a, byte[] b){
+        int length = a.length + b.length;
+        byte[] result = new byte[length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
+    }
 	
 	private void printDatagram( byte[] data, int realLength) {
 		//van Paul gekregen :)

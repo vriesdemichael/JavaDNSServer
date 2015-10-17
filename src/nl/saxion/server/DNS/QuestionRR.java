@@ -82,6 +82,18 @@ public class QuestionRR {
 		return question;
 	}
 	
+	public ArrayList<Segment> getName(){
+		return nameSegments;
+	}
+	
+	public int getQuestionType(){
+		return questionType.getValue();
+	}
+	
+	public int getQuestionClass(){
+		return questionClass.getValue();
+	}
+	
 	public void printName(){
 		String[] names = new String[nameSegments.size()];
 		for(int i = 0; i < nameSegments.size(); i++){

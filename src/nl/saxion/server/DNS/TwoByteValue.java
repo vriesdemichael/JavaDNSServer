@@ -2,8 +2,11 @@ package nl.saxion.server.DNS;
 
 public class TwoByteValue {
 
-	public int length = 2;
+//	+--+--+--+--+--+--+--+--||--+--+--+--+--+--+--+--+
+//	|		high byte		||		low byte		 |
+//	+--+--+--+--+--+--+--+--||--+--+--+--+--+--+--+--+
 	
+	public int length = 2;
 	private int intValue;
 	
 	public TwoByteValue(byte[] value){
@@ -21,6 +24,10 @@ public class TwoByteValue {
 		
 	}
 	
+	public TwoByteValue(int value) {
+		this.intValue = value;
+	}
+
 	public void setValue(int newValue){
 		this.intValue = newValue;
 	}
