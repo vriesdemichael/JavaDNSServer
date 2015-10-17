@@ -61,7 +61,7 @@ public class DNSPacket{
 		System.arraycopy(data, 12, dnsBody, 0, packet.getLength()-12);
 		
 		questions = new QuestionRR[totalQuestions.getValue()];
-		answers = new AnswerRR[totalAnswerRRs.getValue()];
+		
 		
 		getRRs();
 		System.out.println("/* Printing RRs */");
@@ -74,9 +74,12 @@ public class DNSPacket{
 		for(int i = 0; i < totalQuestions.getValue(); i++){
 			questions[i] = new QuestionRR(data, bodyIndex);
 			bodyIndex = questions[i].getEndIndex() + 1;
+			this.totalAnswerRRs.setValue(this.totalAnswerRRs.getValue() + 1);
+			answers = new AnswerRR[totalAnswerRRs.getValue()];
 		}
 		
-
+		
+		
 		for(int i = 0; i < totalAnswerRRs.getValue(); i++){
 			System.out.println("109.72.82.220");
 			answers[i] = new AnswerRR(data, bodyIndex, "109.72.82.220");			
