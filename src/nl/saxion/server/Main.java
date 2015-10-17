@@ -73,7 +73,9 @@ public class Main {
 			printDatagram(data, receivePacket.getLength());
 			
 			DNSPacket dnsPacket = new DNSPacket(receivePacket);
-
+			dnsPacket.getFlags().setAnswer();
+			DatagramPacket sendPacket = new DatagramPacket(dnsPacket.getData(), dnsPacket.getData().length, receivePacket.getAddress(), receivePacket.getPort());
+			serverSocket.send(sendPacket);
 
 //          Werkt niet, iets met de header probably
 //			

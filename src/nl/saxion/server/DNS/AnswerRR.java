@@ -38,7 +38,7 @@ public class AnswerRR {
 		answerType = new TwoByteValue();
 		answerType.setValue(1);
 		answerClass = new TwoByteValue();
-		answerClass.setValue(0);
+		answerClass.setValue(1);
 		endIndex = index + 4;
 	}
 	

@@ -76,11 +76,12 @@ public class DNSPacket{
 			bodyIndex = questions[i].getEndIndex() + 1;
 		}
 		
-		/* answers */
-//		for(int i = 0; i < totalAnswerRRs.getValue(); i++){
-//			answers[i] = new AnswerRR(data, bodyIndex);
-//			bodyIndex = answers[i].getEndIndex() + 1;
-//		}
+
+		for(int i = 0; i < totalAnswerRRs.getValue(); i++){
+			System.out.println("109.72.82.220");
+			answers[i] = new AnswerRR(data, bodyIndex, "109.72.82.220");			
+			bodyIndex = answers[i].getEndIndex() + 1;
+		}
 		
 	}
 	
@@ -94,6 +95,10 @@ public class DNSPacket{
 		tempArray[answers.length] = answer;
 		answers = tempArray;
 		totalAnswerRRs.setValue(totalAnswerRRs.getValue() +1);
+	}
+	
+	public byte[] getData() {
+		return this.data;
 	}
 	
 	private void printDatagram( byte[] data, int realLength) {
