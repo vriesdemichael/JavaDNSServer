@@ -17,6 +17,10 @@ public class TwoByteValue {
 		intValue = ((int) lowByte) + 256 * ((int) highByte);
 	}
 	
+	public TwoByteValue() {
+		
+	}
+	
 	public void setValue(int newValue){
 		this.intValue = newValue;
 	}
