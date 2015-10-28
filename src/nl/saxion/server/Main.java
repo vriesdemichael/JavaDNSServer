@@ -19,9 +19,6 @@ public class Main extends Observable {
 	private static Map<String,Ipv4> records = new HashMap<String,Ipv4>();
 	public static int amountOfRequests = 0;
 
-	public static void main(String args[]) throws Exception {
-		new Main();
-	}
 	
 	public Main() throws IOException {
 		Main.loadRecords();
