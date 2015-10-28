@@ -1,23 +1,45 @@
 package nl.saxion.server;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Scanner;
 
 import nl.saxion.server.DNS.DNSPacket;
+import nl.saxion.server.DNS.Ipv4;
 
-public class Main {
+public class Main extends Observable {
+	
+	private static Map<String,Ipv4> records = new HashMap<String,Ipv4>();
+	public static int amountOfRequests = 0;
 
 	public static void main(String args[]) throws Exception {
-
+		new Main();
+	}
+	
+	public Main() throws IOException {
+		Main.loadRecords();
+		
 		@SuppressWarnings("resource")
 		DatagramSocket serverSocket = new DatagramSocket(53);
 		byte[] receiveData = new byte[2048];
 
 		while (true) {
 			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+			System.out.println("stuff");
 			serverSocket.receive(receivePacket);
 			
-			System.out.println("Received datagram: " + receivePacket.getLength());
+			Main.amountOfRequests++;
+			this.setChanged();
+			this.notifyObservers();
+			
+			//System.out.println("Received datagram: " + receivePacket.getLength());
 			
 
 			//turn into DNSPacket
@@ -27,14 +49,14 @@ public class Main {
 			
 			//Create new datagram packet to send back
 			DatagramPacket sendPacket = new DatagramPacket(dnsPacket.getBytes(), dnsPacket.getBytes().length, receivePacket.getAddress(), receivePacket.getPort());
-			System.out.println("/* Printing response packet to be sent to the client */");
-			System.out.println("Amount of answers: " + dnsPacket.getAmountOfAnswers());
-			System.out.println("First name segment: " + dnsPacket.getQuestions()[0].getName().get(0));
+			//System.out.println("/* Printing response packet to be sent to the client */");
+			//System.out.println("Amount of answers: " + dnsPacket.getAmountOfAnswers());
+			//System.out.println("First name segment: " + dnsPacket.getQuestions()[0].getName().get(0));
 			printDatagram(dnsPacket.getBytes(), dnsPacket.getBytes().length);
 			
 			//send the packet back
 			serverSocket.send(sendPacket);
-			System.out.println("--------\n\n\n");
+			//System.out.println("--------\n\n\n");
 		}
 	}
 	
@@ -58,53 +80,47 @@ public class Main {
 			}
 		}
 
-		System.out.println(String.format("%-48s   %s", hex, ascii));
+		//System.out.println(String.format("%-48s   %s", hex, ascii));
 	}
 	
-//	private static void addAnswer(byte[] data, byte[] answer, int realLength) {
-//		for(int i = 0; i< answer.length; i++){
-//			data[realLength+i] = answer[i];
-//		}
-//	}
+	public static Ipv4 getIpv4FromHost(String domain) {
 
-//	private static int doubleByteToInt(byte low, byte high){
-//		int lowInt = (int) low;
-//		int highInt = (int) high;
-//		return	lowInt+ highInt*256;	
-//	}
+
+		for (Map.Entry<String, Ipv4> entry : Main.records.entrySet()) {
+			if (domain.contains(entry.getKey())) {
+				return entry.getValue();
+			}
+		}
+
+
+		return new Ipv4(8,8,8,8);
+	}
 	
-//	private static byte[] intToDoubleByte(int i){
-//		int lowInt = i%256;
-//		int highInt = i/256;
-//		byte[] byteVersion= {((byte) highInt), ((byte) lowInt)};
-//		return byteVersion;
-//	}
+	public static ArrayList<String> getRecords() {
+		ArrayList<String> rec = new ArrayList<String>();
+		for (Map.Entry<String, Ipv4> entry : Main.records.entrySet()) {
+			rec.add(entry.getKey()+" | ip: " + entry.getValue());
+		}
+		return rec;
+	}
 	
-//	private static void setAnswerCount(byte[] data, int count){
-//		byte[] newValue = intToDoubleByte(count);
-//		data[6] = newValue[0];
-//		data[7] = newValue[1];
-//	}
-	
-//	private static void setAnswer(byte[] data){
-//		//flip QR
-//		data[2] = (byte) (data[2] | (1 <<7));
-//		
-//	}
-	
-//private static boolean isAnswer(byte[] data){
-//		//check if the packet is a 
-//		if (!isBitSet(data[2],7)) {
-//			System.out.println("\nPacket is a question");
-//			return true;
-//		} else {
-//			System.out.println("\nPacket is a answer");
-//			return false;
-//		}
-//	}
-	
-//	private static Boolean isBitSet(byte b, int bit){
-//	    return (b & (1 << bit)) != 0;
-//	}
+	private static void loadRecords() {
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("records.txt"));
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+		    
+		    while (line != null) {
+		    	
+		    	Scanner sc = new Scanner(line);
+		    	
+		    	records.put(sc.next(), new Ipv4(sc.nextInt(),sc.nextInt(),sc.nextInt(),sc.nextInt()));
+		        line = br.readLine();
+		    }
+		} catch(Exception e) {
+			
+		} 
+	}
 	
 }

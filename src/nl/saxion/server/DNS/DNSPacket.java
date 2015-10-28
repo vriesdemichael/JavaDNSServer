@@ -2,6 +2,8 @@ package nl.saxion.server.DNS;
 
 import java.net.DatagramPacket;
 
+import nl.saxion.server.Main;
+
 public class DNSPacket{
 	private byte[] data = new byte[1024];
 	/**
@@ -63,8 +65,8 @@ public class DNSPacket{
 		
 		
 		getRRs();
-		System.out.println("/* Printing RRs */");
-		questions[0].printName();
+		//System.out.println("/* Printing RRs */");
+		//questions[0].printName();
 		printDatagram(questions[0].getBytes(), questions[0].getBytes().length);
 	}
 	
@@ -94,7 +96,10 @@ public class DNSPacket{
 			//answers the questions
 			for(QuestionRR q : questions){
 				AnswerRR a = new AnswerRR(q);
-				a.setIPv4Answer(192, 168, 1, 14);
+				//System.out.println(q.getNames());
+				Ipv4 ip = Main.getIpv4FromHost(q.getNames());
+				//System.out.println(ip.getS1());
+				a.setIPv4Answer(ip.getS1(), ip.getS2(), ip.getS3(), ip.getS4());
 				addAnswer(a);
 			}		
 		}else{
@@ -218,6 +223,6 @@ public class DNSPacket{
 			}
 		}
 
-		System.out.println(String.format("%-48s   %s", hex, ascii));
+		//System.out.println(String.format("%-48s   %s", hex, ascii));
 	}
 }

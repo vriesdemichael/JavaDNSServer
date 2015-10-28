@@ -100,6 +100,14 @@ public class QuestionRR {
 			names[i] = nameSegments.get(i).toString();
 		}
 		String.join(".", names);
-		System.out.println("Question name: " + String.join(".", names));
+		//System.out.println("Question name: " + String.join(".", names));
+	}
+	
+	public String getNames() {
+		String[] names = new String[nameSegments.size()];
+		for(int i = 0; i < nameSegments.size(); i++){
+			names[i] = nameSegments.get(i).toString();
+		}
+		return String.join(".", names);
 	}
 }
