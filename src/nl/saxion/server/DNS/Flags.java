@@ -118,6 +118,10 @@ public class Flags {
 	public int getOpcode(){
 		return (highByte & 0x78) >> 3;
 	}
+	
+	public void setNameNotFound(){
+		lowByte = 3;
+	}
 
 		
 	private byte setBit(byte b, int pos){
