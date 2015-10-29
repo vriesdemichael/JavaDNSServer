@@ -36,9 +36,6 @@ public class Main extends Observable {
 			this.setChanged();
 			this.notifyObservers();
 			
-			//System.out.println("Received datagram: " + receivePacket.getLength());
-			
-
 			//turn into DNSPacket
 			DNSPacket dnsPacket = new DNSPacket(receivePacket);
 			//flips QR to make it a answer
@@ -46,14 +43,9 @@ public class Main extends Observable {
 			
 			//Create new datagram packet to send back
 			DatagramPacket sendPacket = new DatagramPacket(dnsPacket.getBytes(), dnsPacket.getBytes().length, receivePacket.getAddress(), receivePacket.getPort());
-			//System.out.println("/* Printing response packet to be sent to the client */");
-			//System.out.println("Amount of answers: " + dnsPacket.getAmountOfAnswers());
-			//System.out.println("First name segment: " + dnsPacket.getQuestions()[0].getName().get(0));
-			printDatagram(dnsPacket.getBytes(), dnsPacket.getBytes().length);
 			
 			//send the packet back
 			serverSocket.send(sendPacket);
-			//System.out.println("--------\n\n\n");
 		}
 	}
 	
