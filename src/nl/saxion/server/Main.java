@@ -101,7 +101,7 @@ public class Main extends Observable {
 		return rec;
 	}
 	
-	private static void loadRecords() {
+	public static void loadRecords() {
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("records.txt"));

@@ -1,29 +1,23 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import nl.saxion.server.Main;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JList;
-import javax.swing.JTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import nl.saxion.server.Main;
 
 public class Gui extends JFrame  {
 
@@ -102,6 +96,7 @@ public class Gui extends JFrame  {
 					addLineToRecords(textField.getText());
 				} else {
 					System.out.println("I WANNA KNOW WHAT LOVE IS!!! I WANT YOU TO SHOOOOOOOOOOOW ME!");
+					new ErrorDialog();
 				}
 			}
 		});
@@ -137,6 +132,7 @@ public class Gui extends JFrame  {
 
 
 	public void update() {
+		Main.loadRecords();
 		this.amountReq.setText(Main.amountOfRequests+"");
 		
 		DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -156,14 +152,31 @@ public class Gui extends JFrame  {
 	}
 	
 	private void addLineToRecords(String line) {
-		try {
-		    Files.write(Paths.get("records.txt"), line.getBytes(), StandardOpenOption.APPEND);
-		}catch (IOException e) {
-		    //exception handling left as an exercise for the reader
-		}
+		try(PrintWriter output = new PrintWriter(new FileWriter("records.txt",true))) 
+		{
+		    output.printf("%s\r\n", line);
+		} 
+		catch (Exception e) {}
 	}
 	
 	private boolean checkInput(String s) {
+		Scanner sc = new Scanner(s);
+		try {
+			String domain = sc.next();
+			String n1 = sc.next();
+			String n2 = sc.next();
+			String n3 = sc.next();
+			String n4 = sc.next();
+		
+			if(Integer.parseInt(n1) > 255 || Integer.parseInt(n1) < 0) {return false; }
+			if(Integer.parseInt(n2) > 255 || Integer.parseInt(n2) < 0) {return false; }
+			if(Integer.parseInt(n3) > 255 || Integer.parseInt(n3) < 0) {return false; }
+			if(Integer.parseInt(n4) > 255 || Integer.parseInt(n4) < 0) {return false; }
+		} catch (Exception e) {
+			return false;
+		}
+		
+		
 		return true;
 	}
 }

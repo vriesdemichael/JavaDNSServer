@@ -104,6 +104,8 @@ public class DNSPacket{
 					//System.out.println(ip.getS1());
 					a.setIPv4Answer(ip.getS1(), ip.getS2(), ip.getS3(), ip.getS4());
 					addAnswer(a);
+				}else{
+					flags.setNameNotFound();
 				}
 			}		
 		}else{
