@@ -2,6 +2,10 @@ package nl.saxion.server.DNS;
 
 import java.util.ArrayList;
 
+import nl.saxion.server.DNS.datatypes.FourByteValue;
+import nl.saxion.server.DNS.datatypes.Segment;
+import nl.saxion.server.DNS.datatypes.TwoByteValue;
+
 //	+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 //	| 												|
 //	/ 												/

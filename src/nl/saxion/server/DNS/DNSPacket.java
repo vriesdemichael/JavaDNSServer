@@ -3,6 +3,8 @@ package nl.saxion.server.DNS;
 import java.net.DatagramPacket;
 
 import nl.saxion.server.Main;
+import nl.saxion.server.DNS.datatypes.Ipv4;
+import nl.saxion.server.DNS.datatypes.TwoByteValue;
 
 public class DNSPacket{
 	private byte[] data = new byte[1024];

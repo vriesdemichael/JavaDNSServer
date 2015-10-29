@@ -12,7 +12,7 @@ import java.util.Observable;
 import java.util.Scanner;
 
 import nl.saxion.server.DNS.DNSPacket;
-import nl.saxion.server.DNS.Ipv4;
+import nl.saxion.server.DNS.datatypes.Ipv4;
 
 public class Main extends Observable {
 	

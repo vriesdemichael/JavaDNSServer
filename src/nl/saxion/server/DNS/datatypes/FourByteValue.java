@@ -1,4 +1,4 @@
-package nl.saxion.server.DNS;
+package nl.saxion.server.DNS.datatypes;
 
 public class FourByteValue {
 	

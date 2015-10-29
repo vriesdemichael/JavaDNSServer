@@ -2,6 +2,9 @@ package nl.saxion.server.DNS;
 
 import java.util.ArrayList;
 
+import nl.saxion.server.DNS.datatypes.Segment;
+import nl.saxion.server.DNS.datatypes.TwoByteValue;
+
 public class QuestionRR {
 	public int length;
 	private ArrayList<Segment> nameSegments;
