@@ -1,6 +1,3 @@
 nu.nl 109 72 82 220
 google.com 109 72 82 14
 youtube.com 8 8 8 8
-michael.lan 10 10 10 10
-stefan.cool 10 10 10 11
-ah.nl 1 1 1 1
