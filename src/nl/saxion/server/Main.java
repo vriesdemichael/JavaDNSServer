@@ -81,16 +81,16 @@ public class Main extends Observable {
 	}
 	
 	public static Ipv4 getIpv4FromHost(String domain) {
-
+		System.out.println(domain);
 
 		for (Map.Entry<String, Ipv4> entry : Main.records.entrySet()) {
-			if (domain.contains(entry.getKey())) {
+			if (domain.equals(entry.getKey())) {
 				return entry.getValue();
 			}
 		}
 
 
-		return new Ipv4(8,8,8,8);
+		return null;
 	}
 	
 	public static ArrayList<String> getRecords() {

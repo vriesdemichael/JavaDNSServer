@@ -98,9 +98,13 @@ public class DNSPacket{
 				AnswerRR a = new AnswerRR(q);
 				//System.out.println(q.getNames());
 				Ipv4 ip = Main.getIpv4FromHost(q.getNames());
-				//System.out.println(ip.getS1());
-				a.setIPv4Answer(ip.getS1(), ip.getS2(), ip.getS3(), ip.getS4());
-				addAnswer(a);
+				
+				if (ip != null) {
+				
+					//System.out.println(ip.getS1());
+					a.setIPv4Answer(ip.getS1(), ip.getS2(), ip.getS3(), ip.getS4());
+					addAnswer(a);
+				}
 			}		
 		}else{
 			//get the answers from the packets
